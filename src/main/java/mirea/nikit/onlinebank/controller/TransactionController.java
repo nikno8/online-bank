@@ -21,6 +21,12 @@ public class TransactionController {
     public List <Transaction> getAllTransactions(){
         return transactionService.getAllTransactions();
     }
+
+    @GetMapping("/{accountId}")
+    public List <Transaction> getAllTransactionsForAccount(@PathVariable Long accountId){
+        return transactionService.getAllTransactionsForAccount(accountId);
+    }
+
     @PostMapping("/transfer")
     public ResponseEntity<String> makeTransfer(@RequestBody TransferRequest transferRequest) {
         try {

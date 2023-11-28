@@ -5,6 +5,7 @@ import mirea.nikit.onlinebank.model.Account;
 import mirea.nikit.onlinebank.service.AccountService;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -19,6 +20,11 @@ public class AccountController {
         return accountService.getAllAccounts();
     }
 
+    @GetMapping("/{id}")
+    public Account getAccountById(@PathVariable Long id){
+        return accountService.getAccountById(id);
+    }
+
     @PostMapping
     public void createAccount(@RequestBody Account account) {
         accountService.createAccount(account);
@@ -27,5 +33,10 @@ public class AccountController {
     @DeleteMapping("/{id}")
     public void deleteAccount(@PathVariable Long id) {
         accountService.deleteAccountById(id);
+    }
+
+    @PatchMapping("/addMoney/{id}")
+    public void addMoneyToAccount(@PathVariable Long id, @RequestParam BigDecimal amount){
+        accountService.addMoney(id, amount);
     }
 }

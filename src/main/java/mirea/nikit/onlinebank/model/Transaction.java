@@ -1,7 +1,7 @@
 package mirea.nikit.onlinebank.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,15 +16,20 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long fromId;
-    private Long toId;
     private BigDecimal amount;
-    private  LocalDateTime time;
-
-    public Transaction(Long fromId, Long toId, BigDecimal amount, LocalDateTime time) {
-        this.fromId = fromId;
-        this.toId = toId;
+    private LocalDateTime time;
+    private String status;
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JsonBackReference
+    private Account account;
+    public Transaction(BigDecimal amount, LocalDateTime time, String status, Account account) {
         this.amount = amount;
         this.time = time;
+        this.status = status;
+        this.account = account;
     }
+
+
+
+
 }

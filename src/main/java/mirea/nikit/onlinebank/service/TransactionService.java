@@ -19,19 +19,24 @@ public class TransactionService {
     public List<Transaction> getAllTransactions(){
         return transactionRepository.findAll();
     }
+
+    public List<Transaction> getAllTransactionsForAccount(Long id){
+        return transactionRepository.findTransactionsByAccountId(id);
+    }
     public void makeTransfer(Long fromAccountId, Long toAccountId, BigDecimal amount) throws Exception {
         Account fromAccount = accountService.getAccountById(fromAccountId);
         Account toAccount = accountService.getAccountById(toAccountId);
 
         if (fromAccount.getBalance().compareTo(amount) < 0) {
+            transactionRepository.save(new Transaction(amount,LocalDateTime.now(), "aborted", fromAccount));
             throw new Exception("Insufficient balance in the account");
         }
         fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
         toAccount.setBalance(toAccount.getBalance().add(amount));
         accountService.updateAccount(fromAccount);
         accountService.updateAccount(toAccount);
-        Transaction transaction = new Transaction(fromAccountId,toAccountId,amount,LocalDateTime.now());
-        transactionRepository.save(transaction);
+        transactionRepository.save(new Transaction(amount,LocalDateTime.now(), "debit success", fromAccount));
+        transactionRepository.save(new Transaction(amount,LocalDateTime.now(), "receiving success", toAccount));
     }
 
 }
