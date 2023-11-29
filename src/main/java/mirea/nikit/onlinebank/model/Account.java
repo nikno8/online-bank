@@ -17,12 +17,16 @@ public class Account {
     private Long id;
     private BigDecimal balance;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "account")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "account", orphanRemoval = true)
     @JsonManagedReference
     private List<Transaction> transactions = new ArrayList();
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private SavingsAccount savingsAccount;
 }
