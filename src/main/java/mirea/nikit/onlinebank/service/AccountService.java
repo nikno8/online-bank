@@ -2,7 +2,10 @@ package mirea.nikit.onlinebank.service;
 
 import lombok.RequiredArgsConstructor;
 import mirea.nikit.onlinebank.model.Account;
+import mirea.nikit.onlinebank.model.User;
 import mirea.nikit.onlinebank.repository.AccountRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,6 +26,9 @@ public class AccountService {
     }
 
     public void createAccount(Account bankAccount) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        bankAccount.setUser(currentUser);
         accountRepository.save(bankAccount);
     }
 
