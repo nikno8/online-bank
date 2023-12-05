@@ -35,6 +35,19 @@ public class SavingsAccountService {
             mainAccount.setBalance(mainAccount.getBalance().subtract(amount));
             savingsAccount.setBalance(savingsAccount.getBalance().add(amount));
 
+            if (!savingsAccount.isFullGoalRewardClaimed()) {
+                BigDecimal goal = savingsAccount.getGoal();
+                BigDecimal currentBalance = savingsAccount.getBalance();
+
+                if (currentBalance.compareTo(goal) >= 0) {
+                    // Логика начисления бонуса на основной аккаунт
+                    BigDecimal bonusAmount = goal.multiply(new BigDecimal("0.05"));
+                    mainAccount.setBalance(mainAccount.getBalance().add(bonusAmount));
+                    // Устанавливаем флаг, чтобы бонус не начислялся повторно
+                    savingsAccount.setFullGoalRewardClaimed(true);
+                }
+            }
+
             accountRepository.save(mainAccount);
             savingsAccountRepository.save(savingsAccount);
             return true;
@@ -61,28 +74,28 @@ public class SavingsAccountService {
         return false;
     }
 
-    @Transactional
-    public boolean checkAndRewardForFullGoal(Long accountId) {
-        SavingsAccount savingsAccount = savingsAccountRepository.findById(accountId).orElse(null);
-
-        if (savingsAccount != null) {
-            BigDecimal goal = savingsAccount.getGoal();
-            BigDecimal currentBalance = savingsAccount.getBalance();
-
-            if (currentBalance.compareTo(goal) > 0 && !savingsAccount.isFullGoalRewardClaimed()) {
-                // Логика начисления бонуса на основной аккаунт
-                Account mainAccount = savingsAccount.getAccount();
-                BigDecimal bonusAmount = goal.multiply(new BigDecimal("0.05"));
-                mainAccount.setBalance(mainAccount.getBalance().add(bonusAmount));
-                accountRepository.save(mainAccount);
-                // Устанавливаем флаг, чтобы бонус не начислялся повторно
-                savingsAccount.setFullGoalRewardClaimed(true);
-                savingsAccountRepository.save(savingsAccount);
-
-                return true;
-            }
-        }
-
-        return false;
-    }
+//    @Transactional
+//    public boolean checkAndRewardForFullGoal(Long accountId) {
+//        SavingsAccount savingsAccount = savingsAccountRepository.findById(accountId).orElse(null);
+//
+//        if (savingsAccount != null) {
+//            BigDecimal goal = savingsAccount.getGoal();
+//            BigDecimal currentBalance = savingsAccount.getBalance();
+//
+//            if (currentBalance.compareTo(goal) > 0 && !savingsAccount.isFullGoalRewardClaimed()) {
+//                // Логика начисления бонуса на основной аккаунт
+//                Account mainAccount = savingsAccount.getAccount();
+//                BigDecimal bonusAmount = goal.multiply(new BigDecimal("0.05"));
+//                mainAccount.setBalance(mainAccount.getBalance().add(bonusAmount));
+//                accountRepository.save(mainAccount);
+//                // Устанавливаем флаг, чтобы бонус не начислялся повторно
+//                savingsAccount.setFullGoalRewardClaimed(true);
+//                savingsAccountRepository.save(savingsAccount);
+//
+//                return true;
+//            }
+//        }
+//
+//        return false;
+//    }
 }

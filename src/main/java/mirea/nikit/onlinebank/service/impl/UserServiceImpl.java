@@ -1,5 +1,7 @@
 package mirea.nikit.onlinebank.service.impl;
 
+import mirea.nikit.onlinebank.model.Account;
+import mirea.nikit.onlinebank.model.User;
 import mirea.nikit.onlinebank.repository.UserRepository;
 import mirea.nikit.onlinebank.service.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,5 +28,9 @@ public class UserServiceImpl implements UserService {
                         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
             }
         };
+    }
+
+    public List<User> getAllAccounts() {
+        return userRepository.findAll();
     }
 }

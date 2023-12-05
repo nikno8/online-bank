@@ -30,7 +30,7 @@ public class SavingsAccountController {
         boolean success = savingsAccountService.transferToSavings(accountId, amount);
 
         if (success) {
-            return ResponseEntity.ok("Transfer to savings successful.");
+            return ResponseEntity.ok("Transfer to savings successful. Bonus applied if goal reached.");
         } else {
             return ResponseEntity.badRequest().body("Insufficient funds or account not found.");
         }
@@ -47,14 +47,14 @@ public class SavingsAccountController {
         }
     }
 
-    @PostMapping("/check-and-reward-half-goal/{accountId}")
-    public ResponseEntity<String> checkAndRewardForFullGoal(@PathVariable Long accountId) {
-        boolean success = savingsAccountService.checkAndRewardForFullGoal(accountId);
-
-        if (success) {
-            return ResponseEntity.ok("Reward for reaching 100% of savings goal claimed successfully.");
-        } else {
-            return ResponseEntity.badRequest().body("Either goal not reached or reward already claimed.");
-        }
-    }
+//    @PostMapping("/check-and-reward-half-goal/{accountId}")
+//    public ResponseEntity<String> checkAndRewardForFullGoal(@PathVariable Long accountId) {
+//        boolean success = savingsAccountService.checkAndRewardForFullGoal(accountId);
+//
+//        if (success) {
+//            return ResponseEntity.ok("Reward for reaching 100% of savings goal claimed successfully.");
+//        } else {
+//            return ResponseEntity.badRequest().body("Either goal not reached or reward already claimed.");
+//        }
+//    }
 }

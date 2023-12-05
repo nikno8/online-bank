@@ -29,7 +29,7 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
     @JsonManagedReference
     private List<Account> accounts = new ArrayList<>();
     @Column(unique = true)

@@ -22,8 +22,8 @@ public class Account {
     @JsonManagedReference
     private List<Transaction> transactions = new ArrayList();
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     private User user;
 
